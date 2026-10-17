@@ -2,10 +2,10 @@
 /*
  * Google Pixel Fold (felix).
  *
- * Same GS201 silicon as the Pixel 7 Pro. This board file brings up USB
- * and the cover framebuffer the bootloader is already scanning. It does
- * not describe either panel or either touch controller. The inner panel
- * has no node that could drive it.
+ * Same GS201 silicon as the Pixel 7 Pro. This board file brings up USB,
+ * the cover framebuffer the bootloader is already scanning, and UFS.
+ * It does not describe either panel or either touch controller. The
+ * inner panel has no node that could drive it.
  */
 
 /dts-v1/;
@@ -26,11 +26,10 @@
 	chosen {
 		/*
 		 * ABL requires bootargs and appends its own, including
-		 * console=null. No UFS probe: storage stays off until this
-		 * phone's guard has been checked. Nothing here writes a
-		 * display register. The framebuffer below is the cover plane
-		 * read from DPP2 on the first boot (1080x2092 at 0xfc000000).
-		 * The inner plane, DPP0 at 0xfac00000, is not described.
+		 * console=null. Nothing here writes a display register. The
+		 * framebuffer below is the cover plane read from DPP2 on the
+		 * first boot (1080x2092 at 0xfc000000). The inner plane, DPP0
+		 * at 0xfac00000, is not described.
 		 */
 		bootargs = "console=tty0 panic=10 clk_ignore_unused pd_ignore_unused rdinit=/init";
 		#address-cells = <2>;
@@ -61,6 +60,18 @@
 			no-map;
 		};
 	};
+
+	/*
+	 * UFS VCC. The bootloader leaves this rail on. There is no gs201
+	 * GPIO driver yet, so describe it as an always-on fixed regulator,
+	 * as on the Pixel 7 Pro.
+	 */
+	ufs_0_fixed_vcc_reg: regulator-ufs-vcc {
+		compatible = "regulator-fixed";
+		regulator-name = "ufs-vcc";
+		regulator-always-on;
+		regulator-boot-on;
+	};
 };
 
 &usbdrd31_phy {
@@ -68,5 +79,14 @@
 };
 
 &usb_dwc3 {
+	status = "okay";
+};
+
+&ufs_0 {
+	vcc-supply = <&ufs_0_fixed_vcc_reg>;
+	status = "okay";
+};
+
+&ufs_0_phy {
 	status = "okay";
 };
