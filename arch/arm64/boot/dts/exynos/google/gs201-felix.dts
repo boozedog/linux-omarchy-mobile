@@ -3,8 +3,8 @@
  * Google Pixel Fold (felix).
  *
  * Same GS201 silicon as the Pixel 7 Pro. This board file brings up USB,
- * the cover framebuffer the bootloader is already scanning, and UFS.
- * It does not describe either panel or either touch controller. The
+ * the cover framebuffer the bootloader is already scanning, UFS, and the
+ * GPU. It does not describe either panel or either touch controller. The
  * inner panel has no node that could drive it.
  */
 
@@ -88,5 +88,10 @@
 };
 
 &ufs_0_phy {
+	status = "okay";
+};
+
+&gpu {
+	/* No mali-supply: the G3D rails follow the PMU power domain and ACPM. */
 	status = "okay";
 };
