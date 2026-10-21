@@ -473,6 +473,33 @@
 			};
 		};
 
+		usi6: usi@109500c0 {
+			compatible = "google,gs201-usi", "samsung,exynos850-usi";
+			reg = <0x109500c0 0x20>;
+			ranges;
+			#address-cells = <1>;
+			#size-cells = <1>;
+			clocks = <&cmu_peric0 CLK_GOUT_PERIC0_USI6_USI_PCLK>,
+				 <&cmu_peric0 CLK_GOUT_PERIC0_USI6_USI_IPCLK>;
+			clock-names = "pclk", "ipclk";
+			samsung,sysreg = <&sysreg_peric0 0x1014>;
+			status = "disabled";
+
+			spi_6: spi@10950000 {
+				compatible = "google,gs201-spi", "google,gs101-spi";
+				reg = <0x10950000 0x30>;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				clocks = <&cmu_peric0 CLK_GOUT_PERIC0_USI6_USI_PCLK>,
+					 <&cmu_peric0 CLK_GOUT_PERIC0_USI6_USI_IPCLK>;
+				clock-names = "spi", "spi_busclk0";
+				interrupts = <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>;
+				pinctrl-0 = <&spi6_bus>;
+				pinctrl-names = "default";
+				status = "disabled";
+			};
+		};
+
 		usi8: usi@109700c0 {
 			compatible = "google,gs201-usi", "samsung,exynos850-usi";
 			reg = <0x109700c0 0x20>;
