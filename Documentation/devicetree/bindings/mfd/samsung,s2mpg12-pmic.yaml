@@ -33,6 +33,13 @@ properties:
 
   wakeup-source: true
 
+  regulators:
+    type: object
+    $ref: /schemas/regulator/samsung,s2mpg12-regulator.yaml
+    description:
+      LDO regulators. A rail with no child node has no constraints and
+      is left as the bootloader set it.
+
 required:
   - compatible
   - interrupts
