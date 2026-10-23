@@ -372,9 +372,11 @@ static const struct regmap_config s2mpg11_regmap_config_meter = {
 };
 
 /*
- * S2MPG12 (gs201 main PMIC): only what the RTC and the interrupt controller
- * need. Writes are limited to the interrupt masks and the RTC, so that
- * nothing here can change a rail. No caching: every access goes to the PMIC.
+ * S2MPG12 (gs201 main PMIC): the RTC, the interrupt masks, and the LDO
+ * control block. The common block can write only its IBI masks. The PM
+ * block can write INT1M-INT5M and L1M_CTRL through LDO_CTRL2. Buck
+ * control and SW_RESET stay outside that window. No caching: every
+ * access goes to the PMIC.
  */
 static const struct regmap_range s2mpg12_common_registers[] = {
 	regmap_reg_range(0x00, 0x10), /* VGPIO, I3C, IBI, CHIPID, IBI masks */
@@ -405,8 +407,14 @@ static const struct regmap_config s2mpg12_regmap_config_common = {
 	.cache_type = REGCACHE_NONE,
 };
 
+/*
+ * Interrupt masks, plus the LDO control block (L1M_CTRL through LDO_CTRL2).
+ * Buck control (0x17-0x2a), LDO_CTRL3, and SW_RESET stay outside this
+ * window. A rail with no DT constraints is never asked to change.
+ */
 static const struct regmap_range s2mpg12_pmic_wr_registers[] = {
 	regmap_reg_range(S2MPG12_PMIC_INT1M, S2MPG12_PMIC_INT5M),
+	regmap_reg_range(S2MPG12_PMIC_L1M_CTRL, S2MPG12_PMIC_LDO_CTRL2),
 };
 
 static const struct regmap_range s2mpg12_pmic_precious_registers[] = {

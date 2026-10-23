@@ -60,9 +60,13 @@ static const struct resource s2mpg12_rtc_resources[] = {
 	DEFINE_RES_IRQ_NAMED(S2MPG12_IRQ_RTCA0, "alarm"),
 };
 
-/* Only the RTC so far: the rails stay as the bootloader set them. */
+/*
+ * RTC, and the LDOs. The regmap write window is the LDO control block.
+ * Rails with no DT constraints are registered and then left alone.
+ */
 static const struct mfd_cell s2mpg12_devs[] = {
 	MFD_CELL_RES("s2mpg12-rtc", s2mpg12_rtc_resources),
+	MFD_CELL_NAME("s2mpg12-regulator"),
 };
 
 /* Only the LDOs and GPIOs so far: no interrupt, no RTC on this PMIC yet. */
