@@ -237,6 +237,8 @@
 		vdd-supply = <&ldo25m>;
 		avdd-supply = <&ldo26m>;
 		reset-gpios = <&gpp23 3 GPIO_ACTIVE_LOW>;
+		touchscreen-size-x = <1080>;
+		touchscreen-size-y = <2092>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&cover_ts_irq &cover_ts_reset>;
 		status = "disabled";
