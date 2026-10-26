@@ -1252,17 +1252,16 @@ config TOUCHSCREEN_STMFTS
 	  module will be called stmfts.
 
 config TOUCHSCREEN_SALIXP
-	tristate "STMicroelectronics SALIXP SPI chip-id reader"
+	tristate "STMicroelectronics SALIXP SPI touchscreen"
 	depends on SPI
 	help
-	  Say Y here to read the chip id of the STMicroelectronics
-	  SALIXP touch controller (chip id 36 40) over SPI. The driver
-	  enables the supplies and pulses reset. It does not load
-	  firmware or report touches.
+	  Say Y here for the STMicroelectronics SALIXP touch controller
+	  (chip id 36 40) over SPI. After the chip id matches, the
+	  driver registers a touchscreen. It does not read the FIFO,
+	  send a scan command, or request the interrupt.
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called salixp.
-
 config TOUCHSCREEN_STMPE
 	tristate "STMicroelectronics STMPE touchscreens"
 	depends on MFD_STMPE
