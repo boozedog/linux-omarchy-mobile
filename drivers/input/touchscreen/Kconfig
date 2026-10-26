@@ -1256,13 +1256,19 @@ config TOUCHSCREEN_SALIXP
 	depends on SPI
 	help
 	  Say Y here for the STMicroelectronics SALIXP touch controller
-	  (chip id 36 40) over SPI. The driver reads the chip id and
-	  the CRC status register, then registers a touchscreen. A
-	  non-zero status is logged. It does not send a scan command
-	  or request the interrupt.
+	  (chip id 36 40) over SPI. The driver sends a hardware-register
+	  read (opcode 0xfb), a framebuffer read (opcode 0xa7), a FIFO
+	  read (opcode 0x87), and one scan command (0xa0 00 ff). It
+	  toggles reset once after the system-info read. It never sends
+	  opcode 0xfa, a flash or config write, a system or load
+	  command, or the setScanMode preamble. It does not request the
+	  interrupt. Probe stops before the scan command on a config CRC
+	  event (0x20 or 0x21), and on a missing scan echo. It does not
+	  send the scan command again.
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called salixp.
+
 config TOUCHSCREEN_STMPE
 	tristate "STMicroelectronics STMPE touchscreens"
 	depends on MFD_STMPE
