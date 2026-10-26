@@ -11,12 +11,12 @@ maintainers:
 
 description:
   STMicroelectronics SALIXP touch controller on SPI. SALIXP is the FTS
-  part whose chip id is 36 40. The binding covers the chip-id read. It
-  does not describe firmware loading or touch reports. The I2C FingerTip
-  controller is st,stmfts and is a different device.
+  part whose chip id is 36 40. The I2C FingerTip controller is
+  st,stmfts and is a different device.
 
 allOf:
   - $ref: /schemas/spi/spi-peripheral-props.yaml#
+  - $ref: touchscreen.yaml#
 
 properties:
   compatible:
