@@ -1256,9 +1256,10 @@ config TOUCHSCREEN_SALIXP
 	depends on SPI
 	help
 	  Say Y here for the STMicroelectronics SALIXP touch controller
-	  (chip id 36 40) over SPI. After the chip id matches, the
-	  driver registers a touchscreen. It does not read the FIFO,
-	  send a scan command, or request the interrupt.
+	  (chip id 36 40) over SPI. The driver reads the chip id and
+	  the CRC status register, then registers a touchscreen. A
+	  non-zero status is logged. It does not send a scan command
+	  or request the interrupt.
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called salixp.
