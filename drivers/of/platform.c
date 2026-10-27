@@ -501,6 +501,7 @@ static const struct of_device_id reserved_mem_matches[] = {
 static int __init of_platform_default_populate_init(void)
 {
 	struct device_node *node, *reserved;
+	bool sysfb_disabled = false;
 
 	device_links_supplier_sync_state_pause();
 
@@ -578,21 +579,21 @@ static int __init of_platform_default_populate_init(void)
 			of_node_put(node);
 		}
 
-		node = of_get_compatible_child(of_chosen, "simple-framebuffer");
-		if (node) {
-			/*
-			 * Since a "simple-framebuffer" device is already added
-			 * here, disable the Generic System Framebuffers (sysfb)
-			 * to prevent it from registering another device for the
-			 * system framebuffer later (e.g: using the screen_info
-			 * data that may had been filled as well).
-			 *
-			 * This can happen for example on DT systems that do EFI
-			 * booting and may provide a GOP handle to the EFI stub.
-			 */
-			sysfb_disable(NULL);
+		/*
+		 * Create a device for every simple-framebuffer under /chosen,
+		 * not only the first. A board with one is unchanged. Disable
+		 * sysfb once so it does not register another device later
+		 * (for example a DT system that does EFI booting and also
+		 * provides a GOP handle to the EFI stub).
+		 */
+		for_each_child_of_node(of_chosen, node) {
+			if (!of_device_is_compatible(node, "simple-framebuffer"))
+				continue;
+			if (!sysfb_disabled) {
+				sysfb_disable(NULL);
+				sysfb_disabled = true;
+			}
 			of_platform_device_create(node, NULL, NULL);
-			of_node_put(node);
 		}
 
 		/* Populate everything else. */
